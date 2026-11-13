@@ -32,6 +32,18 @@
             </select>
         </div>
 
+        <div class="sm:w-56">
+            <label for="tag" class="mb-2 block text-sm font-medium">Tag</label>
+            <select id="tag" name="tag" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 focus:border-emerald-700 focus:outline-2 focus:outline-emerald-700">
+                <option value="">All tags</option>
+                @foreach ($tags as $tag)
+                    <option value="{{ $tag }}" @selected(request('tag') === $tag)>
+                        {{ $tag }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
         <button type="submit" class="rounded-lg bg-emerald-800 px-5 py-2 font-semibold text-white hover:bg-emerald-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-800">
             Filter
         </button>
@@ -60,6 +72,13 @@
                 </p>
                 <div class="mt-5 flex flex-wrap gap-x-4 gap-y-1 border-t border-stone-100 pt-4 text-sm text-slate-500">
                     <span>{{ $post->published_at?->format('M j, Y') ?? 'Date unavailable' }}</span>
+                    <span>
+                        By
+                        <a href="{{ route('authors.show', $post->author) }}" class="font-medium text-emerald-800 hover:underline">
+                            {{ $post->author->name }}
+                        </a>
+                    </span>
+                    <span>{{ $post->comments_count }} {{ $post->comments_count === 1 ? 'comment' : 'comments' }}</span>
                     <span>{{ $post->views }} {{ $post->views === 1 ? 'view' : 'views' }}</span>
                 </div>
             </article>

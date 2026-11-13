@@ -2,14 +2,53 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePostRequest;
 use App\Models\Post;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    public function create()
+    {
+        abort_unless(auth()->user()->author()->exists(), 403);
+
+        return view('posts.create', [
+            'categories' => [
+                'Announcement',
+                'Health',
+                'Peace & Order',
+                'Ayuda',
+                'Community Events',
+            ],
+            'tags' => Tag::query()->orderBy('name')->get(),
+        ]);
+    }
+
+    public function store(StorePostRequest $request)
+    {
+        $data = $request->validated();
+        $tagIds = $data['tags'];
+        unset($data['tags']);
+
+        $data['is_published'] = (bool) ($data['is_published'] ?? false);
+        $data['published_at'] = $data['is_published'] ? now() : null;
+
+        $author = $request->user()->author()->firstOrFail();
+        $post = $author->posts()->create($data);
+        $post->tags()->sync($tagIds);
+
+        return redirect()
+            ->route('posts.show', $post)
+            ->with('status', 'Post created.');
+    }
+
     public function index(Request $request)
     {
-        $query = Post::query()->where('is_published', true);
+        $query = Post::query()
+            ->with(['author', 'tags'])
+            ->withCount('comments')
+            ->where('is_published', true);
 
         if ($request->filled('q')) {
             $query->where('title', 'like', '%'.$request->input('q').'%');
@@ -17,6 +56,12 @@ class PostController extends Controller
 
         if ($request->filled('category')) {
             $query->where('category', $request->input('category'));
+        }
+
+        if ($request->filled('tag')) {
+            $query->whereHas('tags', function ($tagQuery) use ($request) {
+                $tagQuery->where('name', $request->input('tag'));
+            });
         }
 
         $posts = $query
@@ -30,7 +75,11 @@ class PostController extends Controller
             ->orderBy('category')
             ->pluck('category');
 
-        return view('posts.index', compact('posts', 'categories'));
+        $tags = Tag::query()
+            ->orderBy('name')
+            ->pluck('name');
+
+        return view('posts.index', compact('posts', 'categories', 'tags'));
     }
 
     public function show($id)
@@ -41,6 +90,12 @@ class PostController extends Controller
 
         $post->views += 1;
         $post->save();
+
+        $post->load([
+            'author',
+            'tags',
+            'comments' => fn ($query) => $query->with('user')->latest(),
+        ]);
 
         return view('posts.show', compact('post'));
     }

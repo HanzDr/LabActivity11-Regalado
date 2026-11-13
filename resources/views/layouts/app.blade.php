@@ -17,9 +17,29 @@
                 </a>
             </div>
             <nav aria-label="Main navigation">
-                <a href="{{ route('posts.index') }}" class="inline-block rounded-lg border border-emerald-700 px-4 py-2 text-sm font-medium hover:bg-emerald-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
-                    All posts
-                </a>
+                <div class="flex flex-wrap items-center justify-end gap-3">
+                    <a href="{{ route('posts.index') }}" class="inline-block rounded-lg border border-emerald-700 px-4 py-2 text-sm font-medium hover:bg-emerald-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                        All posts
+                    </a>
+                    @auth
+                        @if (auth()->user()->author()->exists())
+                            <a href="{{ route('posts.create') }}" class="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold hover:bg-emerald-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                                New post
+                            </a>
+                        @endif
+                        <span class="text-sm text-emerald-100">{{ auth()->user()->name }}</span>
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="rounded-lg border border-emerald-700 px-4 py-2 text-sm font-medium hover:bg-emerald-900 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                                Log out
+                            </button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-semibold hover:bg-emerald-600 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white">
+                            Log in
+                        </a>
+                    @endauth
+                </div>
             </nav>
         </div>
     </header>
