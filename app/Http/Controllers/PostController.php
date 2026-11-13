@@ -38,6 +38,12 @@ class PostController extends Controller
         $post = $author->posts()->create($data);
         $post->tags()->sync($tagIds);
 
+        if (! $post->is_published) {
+            return redirect()
+                ->route('posts.index')
+                ->with('status', 'Post saved as draft.');
+        }
+
         return redirect()
             ->route('posts.show', $post)
             ->with('status', 'Post created.');
