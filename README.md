@@ -30,13 +30,15 @@ A Laravel 12 bulletin board for Barangay Matina Crossing in Davao City. Resident
 
 ### Seeded logins
 
-Both named accounts use the password `bulletin2026`:
+Use these credentials at `/login`:
 
-- Lola Regalado: `lola.regalado@bulletin.test`
-- Kagawad Derren Hanz Regalado: `kagawad.regalado@bulletin.test`
+| Account | Email | Password | Access |
+| --- | --- | --- | --- |
+| Lola Regalado | `lola.regalado@bulletin.test` | `bulletin2026` | Comment and view posts |
+| Kagawad Derren Hanz Regalado | `kagawad.regalado@bulletin.test` | `bulletin2026` | Create, publish, comment, and view posts |
 
-The password is hashed by `UserSeeder`. Eight additional resident users are created
-with `UserFactory`.
+The passwords are hashed by `UserSeeder`; they are never stored as plain text.
+Eight additional resident users are created with `UserFactory`.
 
 ### Tags
 
