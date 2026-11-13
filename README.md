@@ -15,16 +15,18 @@ A Laravel 12 bulletin board for Barangay Matina Crossing in Davao City. Resident
 - **Pinned post:** Purok Regalado Clean-up Drive, created with `Post::create()` and assigned to the personalized Kagawad.
 - **Birthday post date:** December 3, 2026, at 15:00 (`2026-12-03 15:00:00`). The lab uses my birthday's month and day with the year set to 2026.
 
-## Features
+## Feature overview
 
-- SQLite database with authors and posts tables, plus a separate reversible migration for the post view counter.
-- Eloquent models with explicit fillable fields and casts for publication flags and dates.
-- Faker factories, including a `draft()` state for unpublished posts.
-- Published posts listed with pinned posts first, followed by the latest publication dates.
-- Optional title search (`?q=`) and category filter (`?category=`).
-- Eight posts per page, with search and category values preserved in pagination links.
-- Individual post pages that save an increased view count. Draft and missing posts return 404.
-- Responsive Blade views styled with Tailwind CSS v4 through `@tailwindcss/vite`.
+- **Authentication:** Residents and the Kagawad can log in and log out. Authenticated users can comment, while only users linked to an author profile can create posts.
+- **Post management:** Authors can create published posts or drafts with a title, body, category, and tags. Published posts are shown with pinned posts first and then the newest publication dates.
+- **Post discovery:** Visitors can search by title, filter by category, filter by tag with `?tag=`, and browse eight posts per page with query strings preserved.
+- **Comments:** Authenticated users can leave validated comments on posts. Comments show the commenter, message, and newest-first ordering.
+- **Authors:** Author pages show the author’s position, published posts, and the number of comments received through their posts.
+- **Tags:** Posts and tags use a many-to-many relationship through the `post_tag` pivot table. Tag badges appear on post cards and detail pages.
+- **Validation and error UX:** Form Requests authorize users and validate post/comment input. Blade forms show summaries, field-level errors, CSRF protection, and preserved old values.
+- **Eager loading:** Controllers eager-load related authors, tags, comments, and users. Lazy loading is prevented during development to catch N+1 queries.
+- **Database and seed data:** SQLite migrations, factories, and seeders create personalized users, authors, posts, tags, and comments.
+- **Responsive interface:** Blade views are styled with Tailwind CSS v4 through `@tailwindcss/vite`.
 
 ## Lab Activity 11 details
 
