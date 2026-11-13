@@ -9,10 +9,10 @@ class CommentController extends Controller
 {
     public function store(StoreCommentRequest $request, Post $post)
     {
-        $data = $request->validated();
-        $data['user_id'] = $request->user()->id;
-
-        $post->comments()->create($data);
+        $post->comments()->create([
+            ...$request->validated(),
+            'user_id' => $request->user()->id,
+        ]);
 
         return redirect()
             ->route('posts.show', $post)

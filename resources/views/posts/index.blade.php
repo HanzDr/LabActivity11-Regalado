@@ -67,6 +67,15 @@
                         {{ $post->title }}
                     </a>
                 </h2>
+                @if ($post->tags->isNotEmpty())
+                    <div class="mt-3 flex flex-wrap gap-2">
+                        @foreach ($post->tags as $tag)
+                            <span class="rounded-full bg-slate-100 px-2.5 py-1 text-xs font-semibold text-slate-700">
+                                {{ $tag->name }}
+                            </span>
+                        @endforeach
+                    </div>
+                @endif
                 <p class="mt-3 flex-1 leading-relaxed text-slate-600 break-words">
                     {{ \Illuminate\Support\Str::limit($post->body, 150) }}
                 </p>

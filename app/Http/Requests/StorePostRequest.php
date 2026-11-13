@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Author;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -14,7 +13,7 @@ class StorePostRequest extends FormRequest
     public function authorize(): bool
     {
         return $this->user() !== null
-            && Author::where('user_id', $this->user()->id)->exists();
+            && $this->user()->author()->exists();
     }
 
     /**

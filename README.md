@@ -1,6 +1,6 @@
 # Barangay Bulletin – Purok Regalado
 
-Lab Activity 10: Eloquent, Migrations, and Seeding
+Lab Activities 10-11: Eloquent, Relationships, Migrations, and Seeding
 
 Derren Hanz Regalado
 
@@ -25,6 +25,55 @@ A Laravel 12 bulletin board for Barangay Matina Crossing in Davao City. Resident
 - Eight posts per page, with search and category values preserved in pagination links.
 - Individual post pages that save an increased view count. Draft and missing posts return 404.
 - Responsive Blade views styled with Tailwind CSS v4 through `@tailwindcss/vite`.
+
+## Lab Activity 11 details
+
+### Seeded logins
+
+Both named accounts use the password `bulletin2026`:
+
+- Lola Regalado: `lola.regalado@bulletin.test`
+- Kagawad Derren Hanz Regalado: `kagawad.regalado@bulletin.test`
+
+The password is hashed by `UserSeeder`. Eight additional resident users are created
+with `UserFactory`.
+
+### Tags
+
+The five seeded tags are **Purok Regalado**, **Urgent**, **Announcement**,
+**Community Events**, and **Health**. Posts receive tags through the `tags()`
+many-to-many relationship, using `attach()` and `sync()` rather than manual pivot
+inserts.
+
+### Relationship map
+
+- `User hasOne Author`: links a login account to one author profile.
+- `User hasMany Comment`: finds comments written by a resident.
+- `Author belongsTo User`: provides the inverse login account.
+- `Author hasMany Post`: creates posts through an author profile.
+- `Author hasManyThrough Comment via Post`: counts comments received across the
+  author's posts.
+- `Post belongsTo Author`: identifies the post author.
+- `Post hasMany Comment`: retrieves comments on a post.
+- `Post belongsToMany Tag`: filters and displays post tags.
+- `Comment belongsTo Post` and `Comment belongsTo User`: identifies the post and
+  commenter.
+- `Tag belongsToMany Post`: provides the inverse tag lookup.
+
+## Lab Activity 11 setup
+
+```powershell
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate:fresh --seed
+npm install
+npm run dev
+php artisan serve
+```
+
+Keep `npm run dev` and `php artisan serve` running in separate terminals, then
+visit **http://127.0.0.1:8000/posts**.
 
 ## Requirements
 

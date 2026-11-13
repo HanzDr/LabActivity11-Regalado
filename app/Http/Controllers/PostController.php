@@ -94,8 +94,12 @@ class PostController extends Controller
         $post->load([
             'author',
             'tags',
-            'comments' => fn ($query) => $query->with('user')->latest(),
+            'comments.user',
         ]);
+        $post->setRelation(
+            'comments',
+            $post->comments->sortByDesc('created_at')->values()
+        );
 
         return view('posts.show', compact('post'));
     }
